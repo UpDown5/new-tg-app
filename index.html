@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>mellstroy.game</title>
+
+  <!-- Шрифты -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Rubik+Bubbles&display=swap"
+    rel="stylesheet"
+  />
+
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <!-- ===== АВТОРИЗАЦИЯ (ЛОГИН / РЕГИСТРАЦИЯ) ===== -->
+  <section id="authView" class="page page-auth">
+    <div class="auth-card glass-card">
+      <div class="auth-header">
+        <div class="logo-dot"></div>
+        <div class="site-name bubble-logo">mellstroy.game</div>
+      </div>
+
+      <div class="auth-tabs">
+        <button id="authLoginTab" class="auth-tab active">Войти</button>
+        <button id="authRegisterTab" class="auth-tab">Регистрация</button>
+      </div>
+
+      <!-- ЛОГИН -->
+      <div id="loginForm" class="auth-form">
+        <label class="input">
+          <span>Никнейм</span>
+          <input id="loginNick" type="text" maxlength="20" placeholder="Ваш ник" />
+        </label>
+        <label class="input">
+          <span>Пароль</span>
+          <input id="loginPass" type="password" maxlength="32" placeholder="Пароль" />
+        </label>
+        <button id="loginBtn" class="primary wide">Войти</button>
+      </div>
+
+      <!-- РЕГИСТРАЦИЯ -->
+      <div id="registerForm" class="auth-form hidden">
+        <label class="input">
+          <span>Никнейм</span>
+          <input id="regNick" type="text" maxlength="20" placeholder="Придумайте ник" />
+        </label>
+        <label class="input">
+          <span>Пароль</span>
+          <input id="regPass" type="password" maxlength="32" placeholder="Придумайте пароль" />
+        </label>
+        <button id="registerBtn" class="primary wide">Создать аккаунт</button>
+        <p class="hint">После регистрации войдите с тем же ником и паролем.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ЛОББИ / ВИТРИНА ИГР ===== -->
+  <section id="lobbyView" class="page hidden">
+    <header class="topbar topbar-light">
+      <div class="brand-left">
+        <div class="bubble-logo site-name">mellstroy.game</div>
+      </div>
+      <div class="acc-box glass-card-small">
+        <div class="acc-line">
+          <div id="accNick" class="acc-nick">Player</div>
+          <div id="accBalance" class="acc-balance">0 ₽</div>
+        </div>
+        <button id="addDemo" class="mini-btn">+ Пополнить демо</button>
+      </div>
+    </header>
+
+    <main class="lobby-scroll">
+      <!-- карточка рулетки -->
+      <div class="game-card glass-card">
+        <div class="game-card-left">
+          <div class="game-title-row">
+            <div class="game-title bubble-logo">Roulette</div>
+            <div class="game-tag">Классика казино</div>
+          </div>
+          <div class="game-desc">
+            Живое колесо, фишки по бокам, шанс сорвать множитель.
+          </div>
+          <button class="primary play-btn" data-game="roulette">Играть</button>
+        </div>
+        <div class="game-card-right roulette-preview">
+          <div class="preview-wheel">
+            <!-- мини-кружок превью, просто декор -->
+            <div class="preview-inner"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- карточка plinko -->
+      <div class="game-card glass-card">
+        <div class="game-card-left">
+          <div class="game-title-row">
+            <div class="game-title bubble-logo">Plinko</div>
+            <div class="game-tag">Риск / награда</div>
+          </div>
+          <div class="game-desc">
+            Шар падает через пины. Высокий x — красный. Малый x — зелёный.
+            Дом всегда с перевесом 😉
+          </div>
+          <button class="primary play-btn" data-game="plinko">Играть</button>
+        </div>
+        <div class="game-card-right plinko-preview">
+          <div class="peg"></div><div class="peg"></div><div class="peg"></div>
+          <div class="peg"></div><div class="peg"></div><div class="peg"></div>
+        </div>
+      </div>
+
+      <!-- карточка mines -->
+      <div class="game-card glass-card">
+        <div class="game-card-left">
+          <div class="game-title-row">
+            <div class="game-title bubble-logo">Mines</div>
+            <div class="game-tag">Открой и не взорвись</div>
+          </div>
+          <div class="game-desc">
+            Поле 4×4. Чем дольше живёшь — тем больше множитель. Бомба = всё.
+          </div>
+          <button class="primary play-btn" data-game="mines">Играть</button>
+        </div>
+        <div class="game-card-right mines-preview">
+          <div class="cell">?</div><div class="cell bombish">✖</div>
+          <div class="cell">✓</div><div class="cell">?</div>
+        </div>
+      </div>
+    </main>
+  </section>
+
+  <!-- ===== ЭКРАН ИГРЫ (полноэкранно) ===== -->
+  <section id="gameView" class="page hidden">
+    <header class="game-topbar">
+      <button id="backToLobby" class="back-btn">← В лобби</button>
+      <div class="bubble-logo now-playing" id="gameTitle">Roulette</div>
+      <div class="acc-box glass-card-small">
+        <div class="acc-line">
+          <div id="accNickGame" class="acc-nick">Player</div>
+          <div id="accBalanceGame" class="acc-balance">0 ₽</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ROULETTE -->
+    <section id="rouletteSection" class="game-section hidden">
+      <div class="roulette-layout">
+        <aside class="bet-panel glass-card">
+          <div class="panel-title">Ставка</div>
+
+          <label class="input compact">
+            <span>Сумма ₽</span>
+            <input id="rouletteBet" type="number" min="1" step="1" value="100" />
+          </label>
+
+          <div class="bet-chips-row">
+            <button class="chip" data-target="rouletteBet" data-val="100">100</button>
+            <button class="chip" data-target="rouletteBet" data-val="500">500</button>
+            <button class="chip" data-target="rouletteBet" data-val="1000">1K</button>
+          </div>
+
+          <div class="bet-block">
+            <div class="bet-label">Выбор</div>
+            <select id="rouletteType" class="select">
+              <option value="red">Красное</option>
+              <option value="black">Чёрное</option>
+              <option value="even">Чёт</option>
+              <option value="odd">Нечёт</option>
+              <option value="single">Число</option>
+            </select>
+          </div>
+
+          <label class="input compact" id="rouletteNumberWrap" style="display:none;">
+            <span>Номер (0–36)</span>
+            <input id="rouletteNumber" type="number" min="0" max="36" placeholder="0–36" />
+          </label>
+
+          <button id="rouletteSpin" class="primary wide">Крутить колесо</button>
+
+          <div id="rouletteInfo" class="info-line"></div>
+        </aside>
+
+        <div class="table-area glass-card">
+          <!-- Канвас рулетки -->
+          <canvas id="rouletteCanvas" class="roulette-canvas"></canvas>
+          <div class="roulette-hint">
+            Деревянное колесо, живая прокрутка, как в реальном казино.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PLINKO -->
+    <section id="plinkoSection" class="game-section hidden">
+      <div class="plinko-layout glass-card">
+        <div class="plinko-controls">
+          <label class="input compact">
+            <span>Ставка ₽</span>
+            <input id="plinkoBet" type="number" min="1" step="1" value="100" />
+          </label>
+
+          <div class="bet-chips-row">
+            <button class="chip" data-target="plinkoBet" data-val="50">50</button>
+            <button class="chip" data-target="plinkoBet" data-val="100">100</button>
+            <button class="chip" data-target="plinkoBet" data-val="250">250</button>
+            <button class="chip" data-target="plinkoBet" data-val="500">500</button>
+          </div>
+
+          <label class="input compact">
+            <span>Ряды</span>
+            <input id="plinkoRows" type="number" min="8" max="14" value="10" />
+          </label>
+
+          <button id="plinkoPlay" class="primary wide">Бросить шар</button>
+          <div id="plinkoInfo" class="info-line"></div>
+        </div>
+
+        <canvas id="plinkoCanvas" class="plinko-canvas"></canvas>
+      </div>
+    </section>
+
+    <!-- MINES -->
+    <section id="minesSection" class="game-section hidden">
+      <div class="mines-layout glass-card">
+        <div class="mines-panel">
+          <label class="input compact">
+            <span>Ставка ₽</span>
+            <input id="minesBet" type="number" min="1" step="1" value="100" />
+          </label>
+
+          <div class="bet-chips-row">
+            <button class="chip" data-target="minesBet" data-val="50">50</button>
+            <button class="chip" data-target="minesBet" data-val="100">100</button>
+            <button class="chip" data-target="minesBet" data-val="250">250</button>
+            <button class="chip" data-target="minesBet" data-val="500">500</button>
+          </div>
+
+          <div class="mines-setup-row">
+            <label class="input compact">
+              <span>Мины</span>
+              <input id="minesCount" type="number" min="1" max="15" value="5" />
+            </label>
+            <div class="stepper">
+              <button id="minesDec" class="ghost step-btn">–</button>
+              <button id="minesInc" class="ghost step-btn">+</button>
+            </div>
+          </div>
+
+          <div class="mine-actions">
+            <button id="minesStart" class="primary wide">Старт</button>
+            <button id="minesCashout" class="ghost wide" disabled>Забрать</button>
+          </div>
+
+          <div id="minesInfo" class="info-line"></div>
+        </div>
+
+        <div class="mines-grid-wrap">
+          <div id="minesGrid" class="mines-grid"></div>
+        </div>
+      </div>
+    </section>
+  </section>
+
+  <!-- тост -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- модалка выигрыша / проигрыша -->
+  <div id="resultModal" class="modal hidden" data-game="">
+    <div class="modal-content glass-card">
+      <div class="bubble-logo modal-logo">mellstroy.game</div>
+      <div id="modalMessage" class="modal-message">Вы выиграли!</div>
+      <div id="modalAmount" class="modal-amount bubble-logo">+100</div>
+      <div class="modal-buttons">
+        <button id="modalOk" class="ghost modal-btn wide">OK</button>
+        <button id="modalRetry" class="primary modal-btn wide">Поставить ещё</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./app.js"></script>
+</body>
+</html>
